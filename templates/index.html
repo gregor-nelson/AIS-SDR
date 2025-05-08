@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIS NMEA Decoder Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Professional fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+</head>
+
+<script type="module" src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<body>
+    <div class="dashboard">
+        <header>
+            <div class="logo-title">
+                <i class="fas fa-ship"></i>
+                <h1>AIS NMEA Decoder Dashboard</h1>
+            </div>
+            <div class="connection-status">
+                <span id="status-indicator" class="status-disconnected"></span>
+                <span id="status-text">Connecting...</span>
+            </div>
+        </header>
+
+        <div class="dashboard-controls">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-label">MESSAGES</div>
+                    <div class="stat-value" id="msg-count">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">VESSELS</div>
+                    <div class="stat-value" id="vessel-count">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">MSG RATE</div>
+                    <div class="stat-value" id="msg-rate">0/s</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">UPTIME</div>
+                    <div class="stat-value" id="uptime">00:00:00</div>
+                </div>
+            </div>
+        </div>
+
+        <main class="dashboard-grid">
+            <!-- Map Panel -->
+            <div class="panel map-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-map-marker-alt"></i> Vessel Map</h2>
+                </div>
+                <div class="panel-content">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- Vessel List Panel -->
+            <div class="panel vessel-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-ship"></i> Vessel Information</h2>
+                    <div class="panel-controls">
+                        <input type="text" id="vessel-search" placeholder="Search vessels...">
+                        <select id="vessel-sort">
+                            <option value="recent">Most Recent</option>
+                            <option value="name">Name</option>
+                            <option value="mmsi">MMSI</option>
+                            <option value="type">Vessel Type</option>
+                            <option value="speed">Speed</option>
+                            <option value="distance">Distance from Center</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <!-- Enhanced vessel filters section -->
+                    <div class="vessel-filters">
+                        <div class="filter-row">
+                            <button id="toggle-advanced-filters">Show Advanced Filters</button>
+                            <button id="clear-filters">Clear Filters</button>
+                            <span id="filtered-count"></span>
+                        </div>
+                        <div class="filter-row advanced-filters">
+                            <label>
+                                <input type="checkbox" id="show-stale-vessels" checked>
+                                Show stale vessels
+                            </label>
+                            <select id="vessel-class-filter">
+                                <option value="all">All Classes</option>
+                                <option value="class-a">Class A</option>
+                                <option value="class-b">Class B</option>
+                                <option value="aton">AtoN</option>
+                                <option value="base">Base Station</option>
+                            </select>
+                            <select id="vessel-status-filter">
+                                <option value="all">All Statuses</option>
+                                <option value="0">Under way using engine</option>
+                                <option value="1">At anchor</option>
+                                <option value="2">Not under command</option>
+                                <option value="3">Restricted maneuverability</option>
+                                <option value="4">Constrained by draught</option>
+                                <option value="5">Moored</option>
+                                <option value="6">Aground</option>
+                                <option value="7">Engaged in fishing</option>
+                                <option value="8">Under way sailing</option>
+                            </select>
+                        </div>
+                        <div class="filter-row speed-filter">
+                            <label>Speed (knots):</label>
+                            <input type="number" id="min-speed-filter" placeholder="Min" min="0" step="0.1">
+                            <span>to</span>
+                            <input type="number" id="max-speed-filter" placeholder="Max" min="0" step="0.1">
+                            <button id="apply-speed-filter">Apply</button>
+                        </div>
+                    </div>
+                    
+                    <div id="vessel-list" class="vessel-list">
+                        <!-- Vessel cards will be added here -->
+                        <div class="empty-message">No vessels detected yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NMEA Messages Panel -->
+            <div class="panel messages-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-broadcast-tower"></i> NMEA Messages</h2>
+                    <div class="panel-controls">
+                        <button id="auto-scroll-toggle" class="toggle-button active" title="Auto-scroll">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                        <button id="clear-messages" class="toggle-button" title="Clear messages">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="message-list" class="message-list">
+                        <!-- Messages will be added here -->
+                        <div class="empty-message">No messages received yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vessel Details Panel -->
+            <div class="panel details-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-info-circle"></i> Vessel Details</h2>
+                    <div class="panel-controls">
+                        <span id="selected-vessel">No vessel selected</span>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="vessel-details" class="vessel-details">
+                        <!-- Selected vessel details will be shown here -->
+                        <div class="empty-message">Select a vessel to view details</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div id="last-message">Waiting for messages...</div>
+            <div class="footer-info">
+                <span id="server-time"></span>
+                <span>AIS NMEA Decoder Dashboard</span>
+            </div>
+            <!-- Professional branding element -->
+            <div class="brand-indicator">
+                <span class="brand-dot"></span>
+                <span class="brand-version">v2.1.3</span>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>

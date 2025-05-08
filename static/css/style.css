@@ -1,0 +1,1772 @@
+/* ==============================================
+   TABLE OF CONTENTS
+   ==============================================
+   1. CSS Variables (Root)
+   2. Base & Reset Styles
+   3. Typography
+   4. Layout Components
+      4.1 Header
+      4.2 Dashboard Controls
+      4.3 Dashboard Grid
+      4.4 Footer
+   5. Panel Components (Common)
+   6. Specific Panels
+      6.1 Map Panel
+      6.2 Vessel Panel
+      6.3 Messages Panel
+      6.4 Details Panel
+   7. UI Components
+      7.1 Buttons
+      7.2 Cards
+      7.3 Tables
+      7.4 Tabs
+      7.5 Forms & Inputs
+   8. Status Indicators
+   9. Map-specific Styles
+   10. Resizable Panel Styles
+   11. Animations
+   12. Responsive Adjustments
+   ============================================== */
+
+/* ==============================================
+   1. CSS VARIABLES (ROOT)
+   ============================================== */
+   :root {
+    /* Main color palette - original theme */
+    --primary-color: #1a237e;       /* Primary brand color */
+    --primary-dark: #0d1642;        /* Darker shade of primary for depth */
+    --primary-light: #534bae;       /* Lighter shade of primary for highlights */
+    --secondary-color: #0288d1;     /* Secondary color for complementary elements */
+    --accent-color: #00b0ff;        /* Accent color for interactive elements */
+    --success-color: #4caf50;       /* Color for success states */
+    --warning-color: #ff9800;       /* Color for warning states */
+    --danger-color: #f44336;        /* Color for error or danger states */
+    --highlight-color: #29B6F6;     /* Color for highlighting important information */
+    --special-color: #9c27b0;       /* Special color for unique elements */
+
+    /* UI surface colors */
+    --background-color: #121212;    /* Main background color */
+    --surface-color: #1e1e1e;       /* Surface color for panels and cards */
+    --card-color: #2d2d2d;          /* Color for card backgrounds */
+    --border-color: #333;           /* Border color for elements */
+
+    /* Text colors */
+    --text-primary: #ffffff;        /* Primary text color */
+    --text-secondary: #b0b0b0;      /* Secondary text color for less emphasis */
+    --text-disabled: #707070;       /* Color for disabled or inactive text */
+
+    /* Enhanced AIS message types */
+    --position-report-color: #4CAF50; /* Color for position report messages */
+    --static-data-color: #2196F3;    /* Color for static data messages */
+    --position-report-b-color: #9C27B0; /* Color for Class B position reports */
+    --binary-message-color: #FF9800; /* Color for binary messages */
+    --aton-report-color: #F44336;    /* Color for AtoN reports */
+    --base-station-color: #00BCD4;   /* Color for base station reports */
+    --static-data-report-color: #3F51B5; /* Color for static data reports */
+
+    /* Navigation status colors */
+    --nav-status-0-color: #4CAF50;   /* Under way using engine */
+    --nav-status-1-color: #FF9800;   /* At anchor */
+    --nav-status-2-color: #F44336;   /* Not under command */
+    --nav-status-3-color: #9C27B0;   /* Restricted maneuverability */
+    --nav-status-4-color: #2196F3;   /* Constrained by draught */
+    --nav-status-5-color: #795548;   /* Moored */
+    --nav-status-6-color: #607D8B;   /* Aground */
+    --nav-status-7-color: #03A9F4;   /* Engaged in fishing */
+    --nav-status-8-color: #00BCD4;   /* Under way sailing */
+
+    /* Professional typography */
+    --font-heading: 'Inter', 'Segoe UI', sans-serif; /* Font for headings */
+    --font-body: 'Roboto', 'Segoe UI', sans-serif;   /* Font for body text */
+    --font-mono: 'JetBrains Mono', 'Consolas', 'Courier New', monospace; /* Font for code/technical text */
+
+    /* Professional UI enhancements */
+    --gradient-primary: linear-gradient(to right, var(--primary-dark), var(--primary-color)); /* Primary gradient */
+    --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--secondary-color));  /* Accent gradient */
+    --notification-glow: 0 0 15px rgba(0, 176, 255, 0.5); /* Glow effect for notifications */
+    --professional-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for professional look */
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3); /* Shadow for cards */
+    --card-hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.4); /* Hover shadow for cards */
+    --subtle-border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border for elements */
+    --button-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth transition for buttons */
+}
+
+/* ==============================================
+   2. BASE & RESET STYLES
+   ============================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ==============================================
+   3. TYPOGRAPHY
+   ============================================== */
+h1, h2, h3, .panel-header h2 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+    font-weight: 600;
+}
+
+.message-list, .message-item, code, .vessel-message-content {
+    font-family: var(--font-mono);
+}
+
+.time-ago {
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+.detail-label, .info-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.detail-value, .info-value {
+    color: var(--text-primary);
+}
+
+.info-value.highlight {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.info-value.warning {
+    color: var(--warning-color);
+    font-weight: 600;
+}
+
+.info-value.danger {
+    color: var(--danger-color);
+    font-weight: 600;
+}
+
+.info-value.success {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+/* ==============================================
+   4. LAYOUT COMPONENTS
+   ============================================== */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* 4.1 Header */
+header {
+    background: var(--gradient-primary);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+}
+
+.logo-title i {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    filter: drop-shadow(0 0 3px rgba(0, 176, 255, 0.4));
+}
+
+.logo-title:after {
+    content: 'BETA';
+    position: absolute;
+    top: -5px;
+    right: -40px;
+    font-size: 10px;
+    background-color: var(--accent-color);
+    color: var(--primary-dark);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-connected, .status-disconnected {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.status-connected {
+    background-color: var(--success-color);
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+}
+
+.status-disconnected {
+    background-color: var(--danger-color);
+    box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
+}
+
+/* 4.2 Dashboard Controls */
+.dashboard-controls {
+    background: var(--gradient-primary);
+    padding: 0.7rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 5;
+    border-bottom: var(--subtle-border);
+}
+
+.stats-bar {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    transition: var(--button-transition);
+}
+
+.stat-value.highlight {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    transform: scale(1.05);
+}
+
+/* 4.3 Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 4.4 Footer */
+footer {
+    background-color: var(--primary-dark);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border-color);
+    position: relative;
+}
+
+#last-message {
+    font-family: var(--font-mono);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+}
+
+.footer-info {
+    display: flex;
+    gap: 1rem;
+}
+
+.brand-indicator {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    opacity: 0.7;
+}
+
+.brand-dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-color);
+}
+
+.brand-version {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+}
+
+/* ==============================================
+   5. PANEL COMPONENTS (COMMON)
+   ============================================== */
+.panel {
+    background-color: var(--surface-color);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--card-shadow);
+    border: var(--subtle-border);
+    transition: box-shadow 0.3s ease;
+    min-height: 150px;
+    min-width: 300px;
+}
+
+.panel-header {
+    background: var(--gradient-primary);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-header h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.panel-header h2 i {
+    color: var(--accent-color);
+    filter: drop-shadow(0 0 3px rgba(0, 176, 255, 0.4));
+}
+
+.panel-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.panel-content {
+    flex: 1;
+    overflow: auto;
+    padding: 1rem;
+}
+
+/* Empty state messages */
+.empty-message {
+    color: var(--text-disabled);
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    background-color: var(--card-color);
+    border-radius: 6px;
+    padding: 2rem;
+    border: 1px dashed var(--border-color);
+}
+
+/* Fullscreen mode */
+.panel.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    grid-column: auto !important;
+    grid-row: auto !important;
+}
+
+.panel.fullscreen .panel-content {
+    height: calc(100vh - 60px);
+}
+
+.fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+}
+
+/* ==============================================
+   6. SPECIFIC PANELS
+   ============================================== */
+
+/* 6.1 Map Panel */
+.map-panel {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    background-color: #1a3045;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 6.2 Vessel Panel */
+.vessel-panel {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+}
+
+.vessel-filters {
+    margin-bottom: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 12px;
+    background-color: var(--card-color);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+.filter-row:last-child {
+    margin-bottom: 0;
+}
+
+.advanced-filters, .speed-filter {
+    display: none;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+.advanced-filters.show, .speed-filter.show {
+    display: flex;
+}
+
+#filtered-count {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.vessel-filters label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.vessel-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    margin-top: 10px;
+    padding-right: 5px;
+}
+
+/* 6.3 Messages Panel */
+.messages-panel {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+.message-list {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.message-item {
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border-color);
+    word-break: break-all;
+    transition: background-color 0.3s ease;
+}
+
+.message-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.message-timestamp {
+    color: var(--accent-color);
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.message-source {
+    color: var(--warning-color);
+    margin-right: 0.5rem;
+}
+
+.message-content {
+    color: var(--text-primary);
+}
+
+/* Enhanced message styles for different AIS types */
+.ais-message {
+    background-color: rgba(0, 176, 255, 0.05);
+    border-left: 3px solid var(--accent-color);
+    transition: all 0.2s ease-in-out;
+}
+
+.ais-message:hover {
+    background-color: rgba(0, 176, 255, 0.1);
+}
+
+.position-report-class-a { border-left-color: var(--position-report-color); }
+.static-voyage-data { border-left-color: var(--static-data-color); }
+.position-report-class-b { border-left-color: var(--position-report-b-color); }
+.binary-message { border-left-color: var(--binary-message-color); }
+.aton-report { border-left-color: var(--aton-report-color); }
+.base-station-report { border-left-color: var(--base-station-color); }
+.static-data-report { border-left-color: var(--static-data-report-color); }
+
+.message-decoded {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.message-type {
+    background-color: var(--card-color);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.message-mmsi {
+    background-color: rgba(0, 176, 255, 0.2);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: 500;
+    color: var(--accent-color);
+}
+
+.message-vessel-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.message-position, .message-static, .message-aton, .message-binary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.message-position { color: var(--position-report-color); }
+.message-static { color: var(--static-data-color); }
+.message-aton { color: var(--aton-report-color); }
+.message-binary { color: var(--binary-message-color); }
+
+/* Expanded message styles */
+.message-expanded {
+    background-color: var(--primary-dark);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    padding-bottom: 8px;
+}
+
+.message-full-details {
+    padding: 8px;
+    margin-top: 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+.message-full-details h4 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.position-field td {
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.object-header td {
+    padding-top: 10px;
+    font-weight: 600;
+    color: var(--accent-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.object-field td:first-child {
+    padding-left: 15px;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.message-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+/* 6.4 Details Panel */
+.details-panel {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+}
+
+#selected-vessel {
+    font-size: 0.9rem;
+    color: var(--accent-color);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+/* Enhanced vessel details styling */
+.vessel-details {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    height: 100%;
+    overflow: auto;
+    background-color: var(--surface-color);
+    border-radius: 0 0 6px 6px;
+}
+
+.vessel-details-content {
+    padding: 0;
+    flex: 1;
+    overflow: auto;
+}
+
+.vessel-info-card {
+    margin: 16px;
+    background-color: var(--card-color);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.vessel-info-header {
+    padding: 16px;
+    background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vessel-title {
+    margin: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vessel-title i {
+    color: var(--accent-color);
+    font-size: 20px;
+}
+
+.vessel-mmsi {
+    color: var(--accent-color);
+    font-size: 14px;
+    font-weight: 400;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+.vessel-badges {
+    display: flex;
+    gap: 8px;
+}
+
+.vessel-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-class-a {
+    background-color: var(--position-report-color);
+    color: #111;
+}
+
+.badge-class-b {
+    background-color: var(--position-report-b-color);
+    color: white;
+}
+
+.badge-aton {
+    background-color: var(--aton-report-color);
+    color: white;
+}
+
+.badge-base-station {
+    background-color: var(--base-station-color);
+    color: #111;
+}
+
+.badge-stale {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.info-section {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.info-section:last-child {
+    border-bottom: none;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.position-container {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.position-marker {
+    background-color: rgba(0, 176, 255, 0.1);
+    padding: 8px;
+    border-radius: 8px;
+    color: var(--accent-color);
+}
+
+.position-marker i {
+    font-size: 20px;
+}
+
+.position-data {
+    flex: 1;
+}
+
+.position-coordinates {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.coordinate {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.position-accuracy {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.technical-data-content {
+    padding: 0;
+}
+
+.technical-data-header {
+    background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.technical-data-title {
+    margin: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.technical-data-subtitle {
+    margin: 6px 0 0 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+.vessel-details .empty-message {
+    margin: 16px;
+    height: calc(100% - 32px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--text-secondary);
+    background-color: var(--card-color);
+    border-radius: 8px;
+    border: 1px dashed var(--border-color);
+}
+
+.vessel-details .empty-message i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: var(--text-disabled);
+}
+
+.vessel-actions {
+    padding: 16px;
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--card-color);
+}
+
+/* ==============================================
+   7. UI COMPONENTS
+   ============================================== */
+
+/* 7.1 Buttons */
+/* Common button styles */
+.toggle-button, 
+.message-action-button, 
+.tech-data-button, 
+.reset-layout-button,
+.fullscreen-button,
+.vessel-filters button,
+.fit-bounds-button, 
+.trails-button, 
+.position-filter-button,
+.action-button {
+    cursor: pointer;
+    transition: var(--button-transition);
+    font-family: var(--font-body);
+    font-weight: 500;
+}
+
+/* Basic button appearance */
+.toggle-button, 
+.message-action-button, 
+.reset-layout-button,
+.fullscreen-button {
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vessel-filters button, 
+.message-action-button {
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: var(--primary-dark);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+}
+
+/* Styled tech data button */
+.tech-data-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(0, 176, 255, 0.1);
+    border: 1px solid rgba(0, 176, 255, 0.3);
+    color: var(--accent-color);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.tech-data-button i {
+    font-size: 16px;
+}
+
+/* Map control buttons */
+.fit-bounds-button, .trails-button, .position-filter-button {
+    background-color: var(--text-primary);
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 16px;
+    color: var(--primary-dark);
+    text-decoration: none;
+    display: block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Action button */
+.action-button {
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.action-button i {
+    font-size: 16px;
+}
+
+.primary-action {
+    background-color: var(--accent-color);
+    color: #fff;
+    border: none;
+}
+
+.secondary-action {
+    background-color: var(--card-color);
+    color: var(--text-primary);
+}
+
+/* Button hover styles */
+.toggle-button:hover, 
+.message-action-button:hover, 
+.reset-layout-button:hover,
+.fullscreen-button:hover,
+.vessel-filters button:hover {
+    background-color: var(--primary-dark);
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+.tech-data-button:hover {
+    background-color: rgba(0, 176, 255, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.fit-bounds-button:hover, .trails-button:hover, .position-filter-button:hover {
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.primary-action:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.secondary-action:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+/* Active button states */
+.toggle-button.active, 
+.trails-button.active, 
+.position-filter-button.active {
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+    border-color: var(--accent-color);
+    transform: scale(1.05);
+    box-shadow: 0 0 5px rgba(0, 176, 255, 0.5);
+}
+
+/* 7.2 Cards */
+/* Vessel card */
+.vessel-card {
+    background-color: var(--card-color);
+    border-radius: 6px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    position: relative;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.vessel-card:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--accent-color);
+    box-shadow: var(--card-hover-shadow);
+    transform: translateY(-2px);
+}
+
+.vessel-card.selected {
+    background-color: var(--primary-dark);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 1px var(--accent-color), 0 0 15px rgba(0, 176, 255, 0.4);
+}
+
+.vessel-card.stale {
+    opacity: 0.6;
+    border-color: var(--text-disabled);
+}
+
+/* Vessel card styles based on class */
+.vessel-card.class-a {
+    border-left: 4px solid var(--success-color);
+}
+
+.vessel-card.class-b {
+    border-left: 4px solid var(--accent-color);
+}
+
+.vessel-card.aton {
+    border-left: 4px solid var(--warning-color);
+}
+
+.vessel-card.base-station {
+    border-left: 4px solid var(--special-color);
+}
+
+/* Professional corner indicators for vessel classes */
+.vessel-card.class-a:before, .vessel-card.class-b:before, .vessel-card.aton:before, .vessel-card.base-station:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+}
+
+.vessel-card.class-a:before { background-color: var(--success-color); }
+.vessel-card.class-b:before { background-color: var(--accent-color); }
+.vessel-card.aton:before { background-color: var(--warning-color); }
+.vessel-card.base-station:before { background-color: var(--special-color); }
+
+.vessel-card:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.vessel-card:hover:after {
+    width: 100%;
+}
+
+.vessel-card.class-a:hover { background-color: rgba(76, 175, 80, 0.1); }
+.vessel-card.class-b:hover { background-color: rgba(33, 150, 243, 0.1); }
+.vessel-card.aton:hover { background-color: rgba(255, 152, 0, 0.1); }
+.vessel-card.base-station:hover { background-color: rgba(156, 39, 176, 0.1); }
+
+/* Status indicators for vessel cards */
+.vessel-card.has-position:before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--success-color);
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+}
+
+.vessel-card.no-position:before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--danger-color);
+    box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
+}
+
+.vessel-name {
+    font-weight: bold;
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+
+.vessel-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.vessel-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.vessel-value {
+    color: var(--text-primary);
+}
+
+/* Stale vessel indicators */
+.stale-indicator {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    background-color: var(--danger-color);
+    color: var(--text-primary);
+    font-size: 0.7rem;
+    border-radius: 4px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stale-warning {
+    margin: 16px;
+    padding: 12px 16px;
+    background-color: rgba(244, 67, 54, 0.1);
+    border: 1px solid var(--danger-color);
+    border-radius: 6px;
+    color: var(--danger-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stale-warning i {
+    font-size: 18px;
+}
+
+.vessel-stale {
+    opacity: 0.7;
+}
+
+/* 7.3 Tables */
+/* Consolidated table styles */
+.message-details-table, 
+.technical-data-table, 
+.vessel-messages-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.message-details-table tr:nth-child(even),
+.technical-data-table tr:nth-child(even),
+.vessel-messages-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.message-details-table td,
+.technical-data-table td,
+.vessel-messages-table td {
+    padding: 10px 16px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.message-details-table td:first-child,
+.technical-data-table td:first-child {
+    font-weight: 500;
+    color: var(--text-secondary);
+    width: 150px;
+}
+
+.technical-data-table th,
+.vessel-messages-table th {
+    background-color: var(--card-color);
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.technical-data-table .field-category {
+    background-color: var(--primary-dark);
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: 12px 16px;
+}
+
+.field-name {
+    color: var(--text-secondary);
+    font-weight: 500;
+    width: 200px;
+}
+
+.field-value {
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+}
+
+.field-value.numeric {
+    font-weight: 500;
+    color: var(--accent-color);
+}
+
+.field-value.text {
+    word-break: break-word;
+}
+
+.technical-data-table tr:hover td {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.vessel-messages-table {
+    margin: 16px;
+    max-width: calc(100% - 32px);
+}
+
+.vessel-message-content {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    word-break: break-all;
+}
+
+.vessel-message-decoded {
+    font-size: 12px;
+    color: var(--accent-color);
+}
+
+.no-messages {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-disabled);
+    font-style: italic;
+}
+
+/* 7.4 Tabs */
+.vessel-tabs {
+    order: -1;
+    margin-bottom: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--surface-color);
+}
+
+.tab-buttons {
+    display: flex;
+    padding: 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--card-color);
+}
+
+.tab-button {
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tab-button i {
+    font-size: 16px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.tab-button.active {
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--accent-color);
+    background-color: rgba(0, 176, 255, 0.05);
+}
+
+.tab-button.active i {
+    opacity: 1;
+    color: var(--accent-color);
+}
+
+#vessel-tab-content {
+    width: 100%;
+    padding: 12px;
+    margin-top: 0;
+    background-color: var(--card-color);
+    border-radius: 0 0 6px 6px;
+    border: 1px solid var(--border-color);
+    border-top: none;
+}
+
+/* Tab content animation */
+.vessel-tab-content.active {
+    display: block;
+    animation: fadeInTab 0.3s ease forwards;
+}
+
+/* 7.5 Forms & Inputs */
+#vessel-search, 
+#vessel-sort, 
+.vessel-filters select, 
+.vessel-filters input {
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-color);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    transition: var(--button-transition);
+}
+
+#vessel-search:focus, 
+#vessel-sort:focus, 
+.vessel-filters select:focus, 
+.vessel-filters input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(0, 176, 255, 0.2);
+    outline: none;
+}
+
+/* ==============================================
+   8. STATUS INDICATORS
+   ============================================== */
+/* Navigation status indicator */
+.nav-status-indicator {
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.nav-status-0 {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: var(--nav-status-0-color);
+}
+
+.nav-status-1 {
+    background-color: rgba(255, 152, 0, 0.15);
+    color: var(--nav-status-1-color);
+}
+
+.nav-status-2 {
+    background-color: rgba(244, 67, 54, 0.15);
+    color: var(--nav-status-2-color);
+}
+
+.nav-status-3 {
+    background-color: rgba(156, 39, 176, 0.15);
+    color: var(--nav-status-3-color);
+}
+
+.nav-status-4 {
+    background-color: rgba(33, 150, 243, 0.15);
+    color: var(--nav-status-4-color);
+}
+
+.nav-status-5 {
+    background-color: rgba(121, 85, 72, 0.15);
+    color: var(--nav-status-5-color);
+}
+
+.nav-status-6 {
+    background-color: rgba(96, 125, 139, 0.15);
+    color: var(--nav-status-6-color);
+}
+
+.nav-status-7 {
+    background-color: rgba(3, 169, 244, 0.15);
+    color: var(--nav-status-7-color);
+}
+
+.nav-status-8 {
+    background-color: rgba(0, 188, 212, 0.15);
+    color: var(--nav-status-8-color);
+}
+
+/* ==============================================
+   9. MAP-SPECIFIC STYLES
+   ============================================== */
+/* Enhanced map markers for vessel status */
+.nav-status-anchored {
+    border: 2px solid var(--nav-status-1-color) !important;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.3) !important;
+}
+
+.nav-status-moored {
+    border: 2px solid var(--nav-status-5-color) !important;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(121, 85, 72, 0.3) !important;
+}
+
+.nav-status-nuc {
+    border: 2px dashed var(--nav-status-2-color) !important;
+    box-shadow: 0 0 0 4px rgba(244, 67, 54, 0.3) !important;
+}
+
+.nav-status-restricted {
+    border: 2px dashed var(--nav-status-3-color) !important;
+    box-shadow: 0 0 0 4px rgba(156, 39, 176, 0.3) !important;
+}
+
+.nav-status-aground {
+    border: 2px solid var(--nav-status-6-color) !important;
+    box-shadow: 0 0 0 4px rgba(96, 125, 139, 0.3) !important;
+}
+
+.nav-status-fishing {
+    border: 2px solid var(--nav-status-7-color) !important;
+    box-shadow: 0 0 0 4px rgba(3, 169, 244, 0.3) !important;
+}
+
+.nav-status-sailing {
+    border: 2px solid var(--nav-status-8-color) !important;
+    box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.3) !important;
+}
+
+/* Enhanced popup styles for map markers */
+.vessel-popup-container {
+    background-color: var(--card-color);
+    border-radius: 4px;
+    border: var(--subtle-border);
+    box-shadow: var(--card-shadow);
+}
+
+.vessel-popup {
+    max-width: 300px;
+    color: var(--text-primary);
+    padding: 4px;
+}
+
+.vessel-popup strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: var(--accent-color);
+    font-weight: 600;
+    font-family: var(--font-heading);
+}
+
+.aton-popup strong {
+    color: var(--warning-color);
+}
+
+.basestation-popup strong {
+    color: var(--base-station-color);
+}
+
+.classb-popup strong {
+    color: var(--nav-status-4-color);
+}
+
+.stale-popup {
+    color: var(--text-secondary);
+}
+
+.popup-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.popup-actions a {
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: var(--primary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 12px;
+    transition: var(--button-transition);
+}
+
+.popup-actions a:hover {
+    background-color: var(--primary-color);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: translateY(-1px);
+}
+
+/* Vessel trail styling */
+.vessel-trail {
+    stroke-dasharray: 5, 5;
+    opacity: 0.8;
+    pointer-events: none;
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.3));
+}
+
+/* ==============================================
+   10. RESIZABLE PANEL STYLES
+   ============================================== */
+/* Base styles for all panel resizers */
+.panel-resizer {
+    position: absolute;
+    z-index: 100;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+/* Horizontal resizer (between left and right panels) */
+.horizontal-resizer {
+    width: 8px;
+    height: 100%;
+    cursor: col-resize;
+    margin-left: -4px; /* Center the resizer on the grid line */
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Vertical resizer (between top and bottom panels) */
+.vertical-resizer {
+    height: 8px;
+    width: 100%;
+    cursor: row-resize;
+    margin-top: -4px; /* Center the resizer on the grid line */
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Corner resizer (intersection point) */
+.corner-resizer {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    cursor: move; /* Show move cursor for the corner handle */
+    margin-left: -6px;
+    margin-top: -6px;
+    box-shadow: 0 0 6px rgba(0, 176, 255, 0.5);
+    border: 2px solid #fff;
+}
+
+/* Hover and active states for resizers */
+.panel-resizer:hover, .panel-resizer.resizing {
+    background-color: var(--accent-color);
+}
+
+.horizontal-resizer:hover, .horizontal-resizer.resizing {
+    width: 8px;
+    margin-left: -4px;
+    opacity: 0.8;
+}
+
+.vertical-resizer:hover, .vertical-resizer.resizing {
+    height: 8px;
+    margin-top: -4px;
+    opacity: 0.8;
+}
+
+.corner-resizer:hover, .corner-resizer.resizing {
+    transform: scale(1.2);
+    opacity: 1;
+}
+
+/* Apply subtle transition for smoother resize */
+.dashboard-grid:not(.grid-resizing) {
+    transition: grid-template-columns 0.1s ease, grid-template-rows 0.1s ease;
+}
+
+/* Increase the z-index of the panel being resized */
+.grid-resizing .panel {
+    z-index: 1;
+}
+
+/* Panel header adjustments for better aesthetics during resize */
+.grid-resizing .panel-header {
+    transition: none;
+}
+
+/* Custom cursor styles for better UX feedback during resize actions */
+body.cursor-col-resize {
+    cursor: col-resize !important;
+}
+
+body.cursor-row-resize {
+    cursor: row-resize !important;
+}
+
+body.cursor-move {
+    cursor: move !important;
+}
+
+/* ==============================================
+   11. ANIMATIONS
+   ============================================== */
+@keyframes fadeIn {
+    from {
+        background-color: rgba(0, 176, 255, 0.3);
+    }
+    to {
+        background-color: transparent;
+    }
+}
+
+@keyframes fadeInTab {
+    from { opacity: 0.8; transform: translateY(3px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade in animation for the newest message */
+.message-item:first-child {
+    animation: fadeIn 2s ease-out;
+}
+
+/* ==============================================
+   12. RESPONSIVE ADJUSTMENTS
+   ============================================== */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+    }
+    
+    .map-panel, .vessel-panel, .messages-panel, .details-panel {
+        grid-row: auto;
+        grid-column: 1 / 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-bar {
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .vessel-list {
+        grid-template-columns: 1fr;
+    }
+    
+    #last-message {
+        display: none;
+    }
+    
+    .footer-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .vessel-badges {
+        flex-wrap: wrap;
+    }
+    
+    .tab-button {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .panel-resizer {
+        display: none; /* Hide resizers on mobile */
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+    }
+}
+
