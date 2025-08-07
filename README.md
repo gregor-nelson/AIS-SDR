@@ -2,6 +2,9 @@
 
 Real-time AIS (Automatic Identification System) message decoder with web-based vessel tracking dashboard.
 
+<img width="1364" height="640" alt="image" src="https://github.com/user-attachments/assets/983a352f-8637-4d49-8394-db8fa464ddf5" />
+
+
 ## Overview
 
 Decodes NMEA 0183 AIS messages and displays vessel positions and data through a web interface. Supports all standard AIS message types with real-time updates via WebSocket.
